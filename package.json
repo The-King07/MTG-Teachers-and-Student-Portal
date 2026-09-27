@@ -1,11 +1,13 @@
 {
-  "name": "talentverse",
+  "name": "mtg-portal",
   "private": true,
   "version": "0.0.1",
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite"
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "client": "vite",
+    "server": "tsx server/index.ts"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -39,13 +41,18 @@
     "@radix-ui/react-toggle": "1.1.2",
     "@radix-ui/react-toggle-group": "1.1.2",
     "@radix-ui/react-tooltip": "1.1.8",
+    "bcryptjs": "^3.0.3",
     "canvas-confetti": "1.9.4",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "cmdk": "1.1.1",
+    "cors": "^2.8.6",
     "date-fns": "3.6.0",
+    "dotenv": "^18.0.4",
     "embla-carousel-react": "8.6.0",
+    "express": "^5.2.1",
     "input-otp": "1.4.2",
+    "jsonwebtoken": "^9.0.3",
     "lucide-react": "0.487.0",
     "motion": "12.23.24",
     "next-themes": "0.4.6",
@@ -66,8 +73,15 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.1.12",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@vitejs/plugin-react": "4.7.0",
+    "concurrency": "^0.1.4",
+    "concurrently": "^10.0.5",
     "tailwindcss": "4.1.12",
+    "tsx": "^4.23.15",
     "vite": "^6.4.3"
   },
   "peerDependencies": {

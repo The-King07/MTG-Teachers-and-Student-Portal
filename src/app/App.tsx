@@ -1,118 +1,142 @@
-import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router";
-import { Toaster } from "sonner";
-import { AuthProvider } from "./context/AuthContext";
-import { NavBar } from "./components/NavBar";
-import { Landing } from "./pages/Landing";
-import { Auth } from "./pages/Auth";
-import { Feed } from "./pages/Feed";
-import { Profile } from "./pages/Profile";
-import { CreatePost } from "./pages/CreatePost";
-import { PostDetail } from "./pages/PostDetail";
-import { LiveBackground } from "./components/LiveBackground";
-import { ActivityTicker } from "./components/ActivityTicker";
-import { CommandPalette } from "./components/CommandPalette";
-import { AudioPlayerBar } from "./components/AudioPlayerBar";
-import { SparkMuseAI } from "./components/SparkMuseAI";
-import { SavedDrawer } from "./components/SavedDrawer";
-import { SplashScreen } from "./components/SplashScreen";
-import { BeatStudio } from "./components/BeatStudio";
-import { ThemeSelector, COSMIC_THEMES, CosmicTheme } from "./components/ThemeSelector";
-import type { Post } from "./store";
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router';
+import { AuthProvider, useAuth } from '../context/AuthContext';
+import { Sidebar } from '../components/Sidebar';
+import { Header } from '../components/Header';
+import { RoleGuard } from '../components/RoleGuard';
+
+// Pages
+import { AuthPage } from '../pages/AuthPage';
+
+// Student Pages
+import { StudentDashboard } from '../pages/student/StudentDashboard';
+import { StudentAttendance } from '../pages/student/StudentAttendance';
+import { StudentTests } from '../pages/student/StudentTests';
+import { StudentChat } from '../pages/student/StudentChat';
+import { StudentAnnouncements } from '../pages/student/StudentAnnouncements';
+import { StudentHistory } from '../pages/student/StudentHistory';
+import { StudentFeedback } from '../pages/student/StudentFeedback';
+import { StudentRecommendations } from '../pages/student/StudentRecommendations';
+import { StudentNotifications } from '../pages/student/StudentNotifications';
+import { StudentProfile } from '../pages/student/StudentProfile';
+
+// Teacher Pages
+import { TeacherDashboard } from '../pages/teacher/TeacherDashboard';
+import { TeacherClasses } from '../pages/teacher/TeacherClasses';
+import { TeacherStudents } from '../pages/teacher/TeacherStudents';
+import { TeacherAttendance } from '../pages/teacher/TeacherAttendance';
+import { TeacherTests } from '../pages/teacher/TeacherTests';
+import { TeacherResults } from '../pages/teacher/TeacherResults';
+import { TeacherChat } from '../pages/teacher/TeacherChat';
+import { TeacherAnnouncements } from '../pages/teacher/TeacherAnnouncements';
+import { TeacherFeedback } from '../pages/teacher/TeacherFeedback';
+import { TeacherRecommendations } from '../pages/teacher/TeacherRecommendations';
+import { TeacherNotifications } from '../pages/teacher/TeacherNotifications';
+import { TeacherProfile } from '../pages/teacher/TeacherProfile';
+
+// Parent Pages
+import { ParentDashboard } from '../pages/parent/ParentDashboard';
+import { ParentChildren } from '../pages/parent/ParentChildren';
+import { ParentAttendance } from '../pages/parent/ParentAttendance';
+import { ParentTests } from '../pages/parent/ParentTests';
+import { ParentHistory } from '../pages/parent/ParentHistory';
+import { ParentFeedback } from '../pages/parent/ParentFeedback';
+import { ParentRecommendations } from '../pages/parent/ParentRecommendations';
+import { ParentAnnouncements } from '../pages/parent/ParentAnnouncements';
+import { ParentNotifications } from '../pages/parent/ParentNotifications';
+import { ParentProfile } from '../pages/parent/ParentProfile';
+
+const LayoutShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+
+  if (!user) {
+    return <>{children}</>;
+  }
+
+  // Derive human readable page title from current path
+  const path = location.pathname;
+  let title = 'Make The Grade';
+  if (path.includes('dashboard')) title = 'Dashboard';
+  else if (path.includes('attendance')) title = 'Attendance Management';
+  else if (path.includes('tests')) title = 'Tests & Examinations';
+  else if (path.includes('results')) title = 'Enter Test Results';
+  else if (path.includes('classes')) title = 'Classes & Subjects';
+  else if (path.includes('students')) title = 'Student Directory';
+  else if (path.includes('children')) title = 'My Children';
+  else if (path.includes('chat')) title = 'Academic Communication';
+  else if (path.includes('announcements')) title = 'Announcements';
+  else if (path.includes('history')) title = 'Academic History';
+  else if (path.includes('feedback')) title = 'Teacher Feedback';
+  else if (path.includes('recommendations')) title = 'Action Recommendations';
+  else if (path.includes('notifications')) title = 'Notifications';
+  else if (path.includes('profile')) title = 'User Profile';
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex text-gray-900">
+      <Sidebar isMobileOpen={mobileMenuOpen} onMobileClose={() => setMobileMenuOpen(false)} />
+      <div className="flex-1 md:pl-64 flex flex-col min-w-0 min-h-screen">
+        <Header onMobileMenuOpen={() => setMobileMenuOpen(true)} title={title} />
+        <main className="flex-1 p-4 md:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+};
 
 export default function App() {
-  const [showSplash, setShowSplash] = useState(true);
-  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-  const [savedDrawerOpen, setSavedDrawerOpen] = useState(false);
-  const [sparkAIOpen, setSparkAIOpen] = useState(false);
-  const [beatStudioOpen, setBeatStudioOpen] = useState(false);
-  const [themeSelectorOpen, setThemeSelectorOpen] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState<CosmicTheme>(COSMIC_THEMES[0]);
-  const [currentTrack, setCurrentTrack] = useState<Post | null>(null);
-
-  const handlePlayAudio = (post: Post) => {
-    setCurrentTrack(post);
-  };
-
-  const handleReplayIntro = () => {
-    setShowSplash(true);
-  };
-
   return (
     <BrowserRouter>
       <AuthProvider>
-        <div className="relative min-h-screen text-white overflow-x-hidden selection:bg-purple-500 selection:text-white bg-[#0B0F19]">
-          {/* Fullscreen Split-Open Cinematic Splash Intro */}
-          {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+        <LayoutShell>
+          <Routes>
+            {/* Public Auth Route */}
+            <Route path="/auth" element={<AuthPage />} />
 
-          {/* Live Background Engine */}
-          <LiveBackground />
+            {/* Student Routes */}
+            <Route path="/student/dashboard" element={<RoleGuard allowedRoles={['STUDENT']}><StudentDashboard /></RoleGuard>} />
+            <Route path="/student/attendance" element={<RoleGuard allowedRoles={['STUDENT']}><StudentAttendance /></RoleGuard>} />
+            <Route path="/student/tests" element={<RoleGuard allowedRoles={['STUDENT']}><StudentTests /></RoleGuard>} />
+            <Route path="/student/chat" element={<RoleGuard allowedRoles={['STUDENT']}><StudentChat /></RoleGuard>} />
+            <Route path="/student/announcements" element={<RoleGuard allowedRoles={['STUDENT']}><StudentAnnouncements /></RoleGuard>} />
+            <Route path="/student/history" element={<RoleGuard allowedRoles={['STUDENT']}><StudentHistory /></RoleGuard>} />
+            <Route path="/student/feedback" element={<RoleGuard allowedRoles={['STUDENT']}><StudentFeedback /></RoleGuard>} />
+            <Route path="/student/recommendations" element={<RoleGuard allowedRoles={['STUDENT']}><StudentRecommendations /></RoleGuard>} />
+            <Route path="/student/notifications" element={<RoleGuard allowedRoles={['STUDENT']}><StudentNotifications /></RoleGuard>} />
+            <Route path="/student/profile" element={<RoleGuard allowedRoles={['STUDENT']}><StudentProfile /></RoleGuard>} />
 
-          {/* Fixed Shell Elements */}
-          <div className="relative z-30">
-            <NavBar
-              onOpenCommandPalette={() => setCommandPaletteOpen(true)}
-              onOpenSaved={() => setSavedDrawerOpen(true)}
-              onOpenAI={() => setSparkAIOpen(true)}
-              onOpenBeatStudio={() => setBeatStudioOpen(true)}
-              onOpenThemeSelector={() => setThemeSelectorOpen(true)}
-              onReplayIntro={handleReplayIntro}
-            />
-            <div className="pt-16">
-              <ActivityTicker />
-            </div>
-          </div>
+            {/* Teacher Routes */}
+            <Route path="/teacher/dashboard" element={<RoleGuard allowedRoles={['TEACHER']}><TeacherDashboard /></RoleGuard>} />
+            <Route path="/teacher/classes" element={<RoleGuard allowedRoles={['TEACHER']}><TeacherClasses /></RoleGuard>} />
+            <Route path="/teacher/students" element={<RoleGuard allowedRoles={['TEACHER']}><TeacherStudents /></RoleGuard>} />
+            <Route path="/teacher/attendance" element={<RoleGuard allowedRoles={['TEACHER']}><TeacherAttendance /></RoleGuard>} />
+            <Route path="/teacher/tests" element={<RoleGuard allowedRoles={['TEACHER']}><TeacherTests /></RoleGuard>} />
+            <Route path="/teacher/results" element={<RoleGuard allowedRoles={['TEACHER']}><TeacherResults /></RoleGuard>} />
+            <Route path="/teacher/chat" element={<RoleGuard allowedRoles={['TEACHER']}><TeacherChat /></RoleGuard>} />
+            <Route path="/teacher/announcements" element={<RoleGuard allowedRoles={['TEACHER']}><TeacherAnnouncements /></RoleGuard>} />
+            <Route path="/teacher/feedback" element={<RoleGuard allowedRoles={['TEACHER']}><TeacherFeedback /></RoleGuard>} />
+            <Route path="/teacher/recommendations" element={<RoleGuard allowedRoles={['TEACHER']}><TeacherRecommendations /></RoleGuard>} />
+            <Route path="/teacher/notifications" element={<RoleGuard allowedRoles={['TEACHER']}><TeacherNotifications /></RoleGuard>} />
+            <Route path="/teacher/profile" element={<RoleGuard allowedRoles={['TEACHER']}><TeacherProfile /></RoleGuard>} />
 
-          {/* Main Content */}
-          <main className="relative z-10 bg-transparent">
-            <Routes>
-              <Route path="/" element={<Landing onPlayAudio={handlePlayAudio} onOpenAI={() => setSparkAIOpen(true)} />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/feed" element={<Feed onPlayAudio={handlePlayAudio} onOpenAI={() => setSparkAIOpen(true)} />} />
-              <Route path="/profile/:id" element={<Profile onPlayAudio={handlePlayAudio} />} />
-              <Route path="/create" element={<CreatePost onOpenAI={() => setSparkAIOpen(true)} />} />
-              <Route path="/post/:id" element={<PostDetail />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
+            {/* Parent Routes */}
+            <Route path="/parent/dashboard" element={<RoleGuard allowedRoles={['PARENT']}><ParentDashboard /></RoleGuard>} />
+            <Route path="/parent/children" element={<RoleGuard allowedRoles={['PARENT']}><ParentChildren /></RoleGuard>} />
+            <Route path="/parent/attendance" element={<RoleGuard allowedRoles={['PARENT']}><ParentAttendance /></RoleGuard>} />
+            <Route path="/parent/tests" element={<RoleGuard allowedRoles={['PARENT']}><ParentTests /></RoleGuard>} />
+            <Route path="/parent/history" element={<RoleGuard allowedRoles={['PARENT']}><ParentHistory /></RoleGuard>} />
+            <Route path="/parent/feedback" element={<RoleGuard allowedRoles={['PARENT']}><ParentFeedback /></RoleGuard>} />
+            <Route path="/parent/recommendations" element={<RoleGuard allowedRoles={['PARENT']}><ParentRecommendations /></RoleGuard>} />
+            <Route path="/parent/announcements" element={<RoleGuard allowedRoles={['PARENT']}><ParentAnnouncements /></RoleGuard>} />
+            <Route path="/parent/notifications" element={<RoleGuard allowedRoles={['PARENT']}><ParentNotifications /></RoleGuard>} />
+            <Route path="/parent/profile" element={<RoleGuard allowedRoles={['PARENT']}><ParentProfile /></RoleGuard>} />
 
-          {/* Interactive Drawers, Modals & Overlays */}
-          <CommandPalette
-            isOpen={commandPaletteOpen}
-            onClose={() => setCommandPaletteOpen(false)}
-            onOpenSaved={() => setSavedDrawerOpen(true)}
-            onOpenAI={() => setSparkAIOpen(true)}
-          />
-
-          <SavedDrawer
-            isOpen={savedDrawerOpen}
-            onClose={() => setSavedDrawerOpen(false)}
-          />
-
-          <SparkMuseAI
-            isOpen={sparkAIOpen}
-            onToggle={() => setSparkAIOpen(prev => !prev)}
-          />
-
-          <BeatStudio
-            isOpen={beatStudioOpen}
-            onClose={() => setBeatStudioOpen(false)}
-          />
-
-          <ThemeSelector
-            isOpen={themeSelectorOpen}
-            onClose={() => setThemeSelectorOpen(false)}
-            onSelectTheme={theme => setCurrentTheme(theme)}
-            currentThemeId={currentTheme.id}
-          />
-
-          <AudioPlayerBar
-            currentTrack={currentTrack}
-            onClose={() => setCurrentTrack(null)}
-          />
-
-          <Toaster theme="dark" position="bottom-right" richColors closeButton />
-        </div>
+            {/* Default Catch-all Fallback */}
+            <Route path="*" element={<Navigate to="/auth" replace />} />
+          </Routes>
+        </LayoutShell>
       </AuthProvider>
     </BrowserRouter>
   );

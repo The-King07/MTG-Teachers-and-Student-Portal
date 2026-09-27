@@ -1,0 +1,161 @@
+{
+  "users": [
+    {
+      "id": "s7n8ahqmuk2mmy0",
+      "username": "teacher_oak",
+      "email": "oak@school.edu",
+      "password": "$2b$10$EddTInvgdsh7W8nCCmE9hehUGAVjeoTV7jRHQYQCUJaxrDlmqXMNW",
+      "name": "Professor Oak",
+      "role": "TEACHER",
+      "phone": "",
+      "created_at": "2026-09-27T17:06:59.112Z"
+    },
+    {
+      "id": "4z2r4qjmuk3wo31",
+      "username": "avi_55",
+      "email": "nobody20070807@gmail.com",
+      "password": "$2b$10$yBf6umrlUjtdnQ9hF2OY5OAqRN/RRTk/cgGPX9JhrDa4nssFP7SK.",
+      "name": "Avinash Raja S",
+      "role": "STUDENT",
+      "phone": "",
+      "created_at": "2026-09-27T17:42:46.765Z"
+    }
+  ],
+  "student_profiles": [
+    {
+      "id": "17a4fo4muk3wo35",
+      "user_id": "4z2r4qjmuk3wo31",
+      "student_code": "STU-951919",
+      "class_id": "",
+      "section": "A",
+      "roll_number": ""
+    }
+  ],
+  "teacher_profiles": [
+    {
+      "id": "bm7966amuk2mmz7",
+      "user_id": "s7n8ahqmuk2mmy0",
+      "teacher_code": "TCH-793857",
+      "qualification": "Faculty Member"
+    }
+  ],
+  "parent_profiles": [],
+  "parent_student_links": [],
+  "classes": [
+    {
+      "id": "class-1",
+      "name": "Class 1",
+      "grade": "Grade 1",
+      "description": "Standard Class 1",
+      "sections": ["A", "B", "C"],
+      "created_at": "2026-09-27T17:00:00.000Z"
+    },
+    {
+      "id": "class-2",
+      "name": "Class 2",
+      "grade": "Grade 2",
+      "description": "Standard Class 2",
+      "sections": ["A", "B", "C"],
+      "created_at": "2026-09-27T17:00:00.000Z"
+    },
+    {
+      "id": "class-3",
+      "name": "Class 3",
+      "grade": "Grade 3",
+      "description": "Standard Class 3",
+      "sections": ["A", "B", "C"],
+      "created_at": "2026-09-27T17:00:00.000Z"
+    },
+    {
+      "id": "class-4",
+      "name": "Class 4",
+      "grade": "Grade 4",
+      "description": "Standard Class 4",
+      "sections": ["A", "B", "C"],
+      "created_at": "2026-09-27T17:00:00.000Z"
+    },
+    {
+      "id": "class-5",
+      "name": "Class 5",
+      "grade": "Grade 5",
+      "description": "Standard Class 5",
+      "sections": ["A", "B", "C"],
+      "created_at": "2026-09-27T17:00:00.000Z"
+    },
+    {
+      "id": "class-6",
+      "name": "Class 6",
+      "grade": "Grade 6",
+      "description": "Standard Class 6",
+      "sections": ["A", "B", "C"],
+      "created_at": "2026-09-27T17:00:00.000Z"
+    },
+    {
+      "id": "class-7",
+      "name": "Class 7",
+      "grade": "Grade 7",
+      "description": "Standard Class 7",
+      "sections": ["A", "B", "C"],
+      "created_at": "2026-09-27T17:00:00.000Z"
+    },
+    {
+      "id": "class-8",
+      "name": "Class 8",
+      "grade": "Grade 8",
+      "description": "Standard Class 8",
+      "sections": ["A", "B", "C"],
+      "created_at": "2026-09-27T17:00:00.000Z"
+    },
+    {
+      "id": "class-9",
+      "name": "Class 9",
+      "grade": "Grade 9",
+      "description": "Standard Class 9",
+      "sections": ["A", "B", "C"],
+      "created_at": "2026-09-27T17:00:00.000Z"
+    },
+    {
+      "id": "class-10",
+      "name": "Class 10",
+      "grade": "Grade 10",
+      "description": "Standard Class 10",
+      "sections": ["A", "B", "C"],
+      "created_at": "2026-09-27T17:00:00.000Z"
+    },
+    {
+      "id": "class-11",
+      "name": "Class 11",
+      "grade": "Grade 11",
+      "description": "Standard Class 11",
+      "sections": ["A", "B", "C"],
+      "created_at": "2026-09-27T17:00:00.000Z"
+    },
+    {
+      "id": "class-12",
+      "name": "Class 12",
+      "grade": "Grade 12",
+      "description": "Standard Class 12",
+      "sections": ["A", "B", "C"],
+      "created_at": "2026-09-27T17:00:00.000Z"
+    }
+  ],
+  "subjects": [
+    {
+      "id": "6nq6jtdmuk2pwm6",
+      "name": "Biology",
+      "code": "BIO-101",
+      "description": ""
+    }
+  ],
+  "teacher_assignments": [],
+  "attendance": [],
+  "tests": [],
+  "test_results": [],
+  "announcements": [],
+  "announcement_reads": [],
+  "conversations": [],
+  "messages": [],
+  "feedback": [],
+  "recommendations": [],
+  "notifications": []
+}
